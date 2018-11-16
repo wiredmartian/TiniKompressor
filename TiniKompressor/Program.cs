@@ -11,13 +11,24 @@ namespace TiniKompressor
     {
         static void Main(string[] args)
         {
+            //Console.BackgroundColor = ConsoleColor.DarkBlue;
+            Console.Title = "TiniKompressor";
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Paste path directory with images");
             var dir = Console.ReadLine();
             MainAsync(args, dir).GetAwaiter().GetResult();
         }
         static async Task MainAsync(string[] args, string path) {
             Program p = new Program();
-            Tinify.Key = ConfigurationManager.AppSettings["TinyKey"];
+            try
+            {
+                Tinify.Key = ConfigurationManager.AppSettings["TinyKey"];
+                await Tinify.Validate();
+            }
+            catch (AccountException e)
+            {
+                Console.WriteLine("ERROR: " + e.Message);
+            }
             List<FileInfo> files = new List<FileInfo>();
             if (Directory.Exists(path))
             {
@@ -28,7 +39,7 @@ namespace TiniKompressor
                     long length = f.Length;
                     var source = Tinify.FromFile(f.FullName);
                     await source.ToFile(f.FullName);
-                    Console.WriteLine("{0} compressed successfully!", f.Name, length, f.Length);
+                    Console.WriteLine("{0} compressed successfully!", f.Name);
                 }
             }
             Console.WriteLine("\n Complete! {0} files compressed. Press Enter to closed", files.Count);
