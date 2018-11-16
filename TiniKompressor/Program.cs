@@ -37,12 +37,22 @@ namespace TiniKompressor
 
         private void GetAllDirectories(DirectoryInfo directoryInfo)
         {
+            FileInfo[] files = null;
             DirectoryInfo[] subDirs = null;
-            subDirs = directoryInfo.GetDirectories();
-            foreach(DirectoryInfo dirInfo in subDirs)
+
+            files = directoryInfo.GetFiles("*.*");
+            if (files != null)
             {
-                Console.WriteLine("{0} found ", dirInfo.FullName);
-                GetAllDirectories(dirInfo);
+                foreach (FileInfo f in files)
+                {
+                    Console.WriteLine(f.FullName);
+                }
+                subDirs = directoryInfo.GetDirectories();
+
+                foreach (DirectoryInfo dirInfo in subDirs)
+                {
+                    GetAllDirectories(dirInfo);
+                }
             }
         }
     }
