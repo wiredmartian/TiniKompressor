@@ -11,7 +11,6 @@ namespace TiniKompressor
     {
         static void Main(string[] args)
         {
-            //Console.BackgroundColor = ConsoleColor.DarkBlue;
             Console.Title = "TiniKompressor";
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Paste path directory with images");
@@ -27,22 +26,40 @@ namespace TiniKompressor
             }
             catch (AccountException e)
             {
-                Console.WriteLine("ERROR: " + e.Message);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("API KEY ERROR: " + e.Message);
+                Console.ReadLine();
+                Environment.Exit(0);
             }
             List<FileInfo> files = new List<FileInfo>();
             if (Directory.Exists(path))
             {
                 files = p.TraverseTree(path);
-                Console.WriteLine("\n------------------ {0} FILES FOUND!--------------------\n", files.Count);
+                Console.WriteLine("\n------------------ {0} FILES FOUND --------------------\n", files.Count);
+                long counter = 0;
                 foreach (FileInfo f in files)
                 {
                     long length = f.Length;
                     var source = Tinify.FromFile(f.FullName);
-                    await source.ToFile(f.FullName);
-                    Console.WriteLine("{0} compressed successfully!", f.Name);
+                    try
+                    {
+                        await source.ToFile(f.FullName);
+                        counter++;
+                        Console.WriteLine("{0} compressed successfully...", f.Name);
+                    }
+                    catch (ClientException e)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("{0} has an unsupported data format...[skipped]", f.Name);
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        continue;
+                    }
+                    
                 }
             }
-            Console.WriteLine("\n Complete! {0} files compressed. Press Enter to closed", files.Count);
+            Console.WriteLine("\n Complete! {0} files compressed. You have done {1} compression(s) so far. Press Enter to close...", files.Count, Tinify.CompressionCount);
+            Console.ReadLine();
+            Environment.Exit(0);
         }
 
         private void GetAllDirectories(DirectoryInfo directoryInfo)
