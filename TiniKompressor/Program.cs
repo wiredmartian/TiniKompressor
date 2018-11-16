@@ -1,8 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using TinifyAPI;
+using System.IO;
 
 namespace TiniKompressor
 {
@@ -10,12 +9,41 @@ namespace TiniKompressor
     {
         static void Main(string[] args)
         {
-            // The code provided will print ‘Hello World’ to the console.
-            // Press Ctrl+F5 (or go to Debug > Start Without Debugging) to run your app.
-            Console.WriteLine("Hello World!");
-            Console.ReadKey();
+            Program p = new Program();
+            Console.WriteLine("Paste path directory with images");
+            var dir = Console.ReadLine();
+            p.GetDirectoriesInAFolder(dir);
+            //int x = p.GetFilesFromDir(dir);
+            //MainAsync(args).GetAwaiter().GetResult();
+        }
+        static async Task MainAsync(string[] args) {
 
-            // Go to http://aka.ms/dotnet-get-started-console to continue learning how to build a console app! 
+            //Tinify.Key = "cn978rXplwsVpq9Pgtsrddw9JfRHF6z5";
+            //var source = Tinify.FromFile("bugs.jpg");
+            //await source.ToFile("bugs_min.jpg");
+
+            //Console.WriteLine("Done...", source);
+        }
+
+        private void GetDirectoriesInAFolder(string path)
+        {
+            if (Directory.Exists(path))
+            {
+                DirectoryInfo info = new DirectoryInfo(path);
+
+                GetAllDirectories(info);
+            }
+        }
+
+        private void GetAllDirectories(DirectoryInfo directoryInfo)
+        {
+            DirectoryInfo[] subDirs = null;
+            subDirs = directoryInfo.GetDirectories();
+            foreach(DirectoryInfo dirInfo in subDirs)
+            {
+                Console.WriteLine("{0} found ", dirInfo.FullName);
+                GetAllDirectories(dirInfo);
+            }
         }
     }
 }
