@@ -32,11 +32,11 @@ namespace TiniKompressor
                 Environment.Exit(0);
             }
             List<FileInfo> files = new List<FileInfo>();
+            long counter = 0;
             if (Directory.Exists(path))
             {
                 files = p.TraverseTree(path);
                 Console.WriteLine("\n------------------ {0} FILES FOUND --------------------\n", files.Count);
-                long counter = 0;
                 foreach (FileInfo f in files)
                 {
                     long length = f.Length;
@@ -57,7 +57,7 @@ namespace TiniKompressor
                     
                 }
             }
-            Console.WriteLine("\n Complete! {0} files compressed. You have done {1} compression(s) so far. Press Enter to close...", files.Count, Tinify.CompressionCount);
+            Console.WriteLine("\n Complete! {0} files compressed. You have done {1} compression(s) so far. Press Enter to close...", counter, Tinify.CompressionCount);
             Console.ReadLine();
             Environment.Exit(0);
         }
