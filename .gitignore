@@ -39,6 +39,7 @@ _ReSharper.*/
 *.opensdf
 *.tlog
 *.log
+*.xml
 TestResult.xml
 *.VisualState.xml
 Version.cs
